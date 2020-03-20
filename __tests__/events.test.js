@@ -11,11 +11,35 @@ describe('event routes', () => {
   beforeAll(() => {
     connect();
   });
-
+  
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
   });
 
+  let recipe;
+  let event;
+  beforeEach(async() => {
+    recipe = await Recipe.create({
+      name: 'cookies',
+      ingredients: [
+        { name: 'flour', amount: 1, measurement: 'cup' }
+      ],
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on cookie sheet',
+        'bake for 10 minutes'
+      ],
+    });
+
+    event = await Event.create({
+      recipeId: recipe._id,
+      dateOfEvent: new Date(),
+      notes: 'It was good',
+      rating: 5
+    });
+  });
+  
   afterAll(() => {
     return mongoose.connection.close();
   });
